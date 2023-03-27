@@ -1,0 +1,46 @@
+pipeline{
+    agent any
+    environment{
+        registry="vikasharya000/worker" 
+        dockerImage=""  
+        dockertoken=credentials("docker-token")
+    }
+    stages{
+        stage('Building our image') { 
+            steps { 
+                script { 
+                    dockerImage = docker.build registry 
+                }
+            } 
+        }
+        stage('Deploy our image') { 
+            steps { 
+                script { 
+                    docker.withRegistry( '', "dockerhub-creds" ) { 
+                        dockerImage.push("${BUILD_NUMBER}") 
+                        dockerImage.push("latest")
+                    }
+                } 
+            }
+        }
+        stage('Package helm chart and push') {
+            steps{
+                timeout(time: 15, unit: "SECONDS") {
+
+                    input message: 'approve the helm push?', ok: 'Yes'
+
+                }
+                script{
+                    sh """
+                    minor_version=\$(grep 'version:' ./chart/worker/Chart.yaml | awk -F '.' '{print \$2}')
+                    new_minor_version=`expr \$minor_version + 1`
+                    cp ./chart/worker/Chart.yaml chart.yaml.tmp && sed "/^\\([[:space:]]*version: \\).*/s//\\10.\${new_minor_version}.0/" < chart.yaml.tmp >./chart/worker/Chart.yaml && rm -f chart.yaml.tmp
+                    echo \${dockertoken} | helm registry login registry-1.docker.io -u vikasharya000 --password-stdin
+                    helm package ./chart/worker/
+                    helm push helm_worker-0.\${new_minor_version}.0.tgz oci://registry-1.docker.io/vikasharya000
+                    """
+                }
+            }
+        }
+    }
+}

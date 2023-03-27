@@ -1,0 +1,12 @@
+apiVersion: v2
+name: helm_worker
+description: A Helm chart for worker app to deploy on Kubernetes cluster
+
+
+type: application
+
+
+version: 0.1.0
+
+
+appVersion: "0.1.0"

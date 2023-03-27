@@ -1,0 +1,4 @@
+fileignoreconfig:
+- filename: Program.cs
+  checksum: 67954a1429e2e69f76dbc16a26efd3da8281b91d8bc528bbb34e8747e862e2c4
+version: ""
