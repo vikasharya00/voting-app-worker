@@ -17,7 +17,7 @@ namespace Worker
             try
             {
                 var pgsql = OpenDbConnection("Server=voting-app-postgresql;Username=postgres;Password=postgres;");
-                var redisConn = OpenRedisConnection("voting-app-redis-master");
+                var redisConn = OpenRedisConnection("voting-app-redis-master`");
                 var redis = redisConn.GetDatabase();
 
                 // Keep alive is not implemented in Npgsql yet. This workaround was recommended:
