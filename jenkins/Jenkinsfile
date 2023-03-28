@@ -32,10 +32,10 @@ pipeline{
                     helm package ./chart/worker/
                     helm push helm_worker-0.\${BUILD_NUMBER}.0.tgz oci://registry-1.docker.io/vikasharya000
                     """
-                    build job: "voting-app-chart", wait: true,parameters: [
-                    string(name: 'workerChartVersion', value: "0.${BUILD_NUMBER}.0")
-                    ]
                 }
+                build job: "voting-app-chart", wait: true,parameters: [
+                string(name: 'workerChartVersion', value: "0.${BUILD_NUMBER}.0")
+                ]
             }
         }
     }
