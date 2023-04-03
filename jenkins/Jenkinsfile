@@ -27,7 +27,7 @@ pipeline{
                 script { 
                     sh """
                     touch docker_image_scan.txt
-                    trivy image ${dockerImage}:${BUILD_NUMBER} > docker_image_scan.txt
+                    trivy image ${registry}:${BUILD_NUMBER} > docker_image_scan.txt
                     """
                 } 
             }
