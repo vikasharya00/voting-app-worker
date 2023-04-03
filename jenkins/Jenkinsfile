@@ -6,19 +6,29 @@ pipeline{
         dockertoken=credentials("docker-token")
     }
     stages{
-        stage('Building our image') { 
+        stage('Build docker image') { 
             steps { 
                 script { 
                     dockerImage = docker.build registry 
                 }
             } 
         }
-        stage('Deploy our image') { 
+        stage('Push docekr image') { 
             steps { 
                 script { 
                     docker.withRegistry( '', "dockerhub-creds" ) { 
                         dockerImage.push("${BUILD_NUMBER}") 
                     }
+                } 
+            }
+        }
+        stage('Scan docekr image') { 
+            steps { 
+                script { 
+                    sh """
+                    touch docker_image_scan.txt
+                    trivy image ${dockerImage}:${BUILD_NUMBER} > docker_image_scan.txt
+                    """
                 } 
             }
         }
