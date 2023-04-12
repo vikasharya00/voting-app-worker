@@ -1,1 +1,7 @@
+global:
+  green:
+     enabled: false
+  blue:
+     enabled: false
+  productionSlot: blue
 image: "vikasharya000/worker"
