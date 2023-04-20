@@ -1,8 +1,7 @@
-{{if .Values.global.blue.enabled}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: worker-blue
+  name: worker
   labels:
     tier: worker
     app: voting-app
@@ -15,9 +14,7 @@ spec:
     metadata:
       labels:
         tier: worker
-        slot: blue
     spec:
       containers:
       - image: {{.Values.image}}
         name: worker
-{{end}}
